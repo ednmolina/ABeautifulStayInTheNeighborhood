@@ -1,0 +1,7 @@
+
+**.DS_Store
+**.idea
+/data_scripts/__pycache__
+/data_scripts/.idea
+/data_scripts/config.json
+/data_scripts/make_config.py
