@@ -4,6 +4,10 @@ from pyspark.sql.types import *
 from pyspark.sql.functions import *
 import json
 
+# Load the configuration s3file
+with open("config.json") as config_json:
+    config = json.load(config_json)
+    
 # Data Config
 region = 'us-west-1'
 bucket = config['s3']['bucket']
@@ -48,4 +52,4 @@ df_selected.printSchema()
 
 spark.stop()
 # Append to the table
- # df.write.jdbc(url, table="abb", mode="append", properties=props)
+ # df.write.jdbc(url=url, table = 'test_table', properties=properties, mode = 'append')
