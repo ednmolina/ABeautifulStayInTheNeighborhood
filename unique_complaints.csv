@@ -1,0 +1,234 @@
+Complaint Type,Clean_Complaint
+abandoned vehicle,Street/Parking
+adopt-a-basket,Other
+advocate - lien,Financial
+advocate - other,Financial
+advocate - rpie,Financial
+advocate-business tax,Financial
+advocate-co-opcondo abatement,Financial
+advocate-commercial exemptions,Financial
+advocate-foreclosure,Financial
+advocate-personal exemptions,Financial
+advocate-prop class incorrect,Financial
+advocate-prop refunds/credits,Financial
+advocate-property value,Financial
+advocate-scrie/drie,Financial
+air quality,Health
+alzheimer's care,Health
+animal abuse,Animal
+animal facility - no permit,Animal
+animal in a park,Animal
+animal-abuse,Animal
+appliance,Other
+asbestos,Health
+atf,Health
+beach/pool/sauna complaint,Building Infrastructure
+bereavement support group,Social
+best/site safety,Building Infrastructure
+bike rack condition,Building Infrastructure
+bike/roller/skate chronic,Social
+blocked driveway,Street/Parking
+boilers,Water/Power
+bottled water,Water/Power
+bridge condition,City Infrastructure
+broken muni meter,Building Infrastructure
+broken parking meter,Street/Parking
+building condition,Building Infrastructure
+building marshals office,Other
+building/use,Building Infrastructure
+bus stop shelter complaint,Street/Parking
+bus stop shelter placement,Street/Parking
+calorie labeling,Health
+case management agency complaint,Social
+city vehicle placard complaint,Street/Parking
+collection truck noise,Noise
+comments,Social
+construction,Street/Parking
+construction safety enforcement,Health
+consumer complaint,Social
+cooling tower,Building Infrastructure
+cranes and derricks,Street/Parking
+curb condition,Street/Parking
+damaged tree,Plant
+day care,Social
+dead tree,Plant
+dead/dying tree,Plant
+dept of investigations,Investigation
+derelict bicycle,Street/Parking
+derelict vehicle,Street/Parking
+derelict vehicles,Street/Parking
+dirty conditions,Health
+disorderly youth,Social
+dispatched taxi complaint,Street/Parking
+dof property - payment issue,Financial
+dof property - reduction issue,Financial
+door/window,Building Infrastructure
+dpr internal,Other
+drie,Financial
+drinking,Health
+drinking water,Water/Power
+drug activity,Drugs
+elder abuse,Social
+electric,Building Infrastructure
+electrical,Building Infrastructure
+electronics waste,Waste
+electronics waste appointment,Waste
+elevator,Building Infrastructure
+elevator,Building Infrastructure
+emergency response team (ert),Health
+executive inspections,Building Infrastructure
+fatf,Financial
+ferry complaint,Social
+ferry inquiry,Social
+fhv licensee complaint,Social
+fire alarm - modification,Building Infrastructure
+fire alarm - new system,Building Infrastructure
+fire alarm - reinspection,Building Infrastructure
+flooring/stairs,Building Infrastructure
+foam ban enforcement,Building Infrastructure
+food establishment,Dining
+food poisoning,Health
+for hire vehicle complaint,Street/Parking
+for hire vehicle report,Street/Parking
+forensic engineering,Investigation
+forms,Social
+found property,Other
+gas station discharge lines,Street/Parking
+general,General Complaint
+general construction,Noise
+general construction/plumbing,Building Infrastructure
+general question,General Complaint
+graffiti,Building Infrastructure
+harboring bees/wasps,Health
+hazardous materials,Health
+hazmat storage/use,Health
+heat/hot water,Building Infrastructure
+heating,Building Infrastructure
+highway condition,Street/Parking
+highway sign - damaged,Street/Parking
+highway sign - missing,Street/Parking
+home care provider complaint,Social
+home delivered meal - missed delivery,Delivery Service
+home delivered meal complaint,Delivery Service
+homeless encampment,Homeless
+homeless person assistance,Homeless
+homeless street condition,Homeless
+housing - low income senior,Low Income Housing
+housing options,Social
+illegal animal kept as pet,Animal
+illegal animal sold,Animal
+illegal fireworks,Noise
+illegal parking,Street/Parking
+illegal tree damage,Animal
+indoor air quality,Health
+indoor sewage,Health
+industrial waste,Health
+interior demo,Other
+investigations and discipline (iad),Investigation
+lead,Health
+legal services provider complaint,Social
+lifeguard,Health
+linknyc,Internet
+litter basket / request,Animal
+maintenance or facility,Building Infrastructure
+miscellaneous categories,Other
+missed collection (all materials),Waste
+mobile food vendor,Dining
+mold,Health
+mosquitoes,Health
+municipal parking facility,Street/Parking
+new tree request,Plant
+noise,Noise
+noise - commercial,Noise
+noise - helicopter,Noise
+noise - house of worship,Noise
+noise - park,Noise
+noise - residential,Noise
+noise - street/sidewalk,Noise
+noise - vehicle,Noise
+noise survey,Noise
+non-emergency police matter,Other
+non-residential heat,Building Infrastructure
+noncompliance with phased reopening,Other
+nonconst,Noise
+open flame permit,Social
+other enforcement,Social
+outside building,Street/Parking
+overflowing litter baskets,Animal
+overflowing recycling baskets,Street/Parking
+overgrown tree/branches,Plant
+paint - plaster,Building Infrastructure
+paint/plaster,Building Infrastructure
+panhandling,Homeless
+pet shop,Animal
+plant,Plant
+plumbing,Building Infrastructure
+plumbing,Building Infrastructure
+poison ivy,Health
+posting advertisement,Street/Parking
+public assembly,Social
+public assembly - temporary,Social
+public payphone complaint,City Infrastructure
+public toilet,City Infrastructure
+question,Other
+radioactive material,Health
+rangehood,Building Infrastructure
+recycling enforcement,Waste
+request large bulky item collection,Waste
+request xmas tree collection,Waste
+research questions,Other
+rodent,Animal
+root/sewer/sidewalk condition,Street/Parking
+safety,Health
+sanitation condition,Health
+scaffold safety,Building Infrastructure
+school maintenance,Building Infrastructure
+scrie,Social
+select message type...,Other
+senior center complaint,Social
+sewer,Health
+sidewalk condition,City Infrastructure
+smoking,Health
+snow,Street/Parking
+special natural area district (snad),City Infrastructure
+special projects inspection team (spit),Social
+sprinkler - mechanical,Building Infrastructure
+squeegee,Building Infrastructure
+srde,Other
+stalled sites,Other
+standing water,Water/Power
+street condition,City Infrastructure
+street light condition,City Infrastructure
+street sign - damaged,City Infrastructure
+street sign - dangling,City Infrastructure
+street sign - missing,City Infrastructure
+sweeping/inadequate,Waste
+sweeping/missed,Waste
+sweeping/missed-inadequate,Waste
+tanning,Health
+tattooing,Social
+taxi complaint,Street/Parking
+taxi licensee complaint,Social
+taxi report,Street/Parking
+taxpayer advocate inquiry,Financial
+traffic,Street/Parking
+traffic signal condition,City Infrastructure
+trans fat,Health
+transportation provider complaint,Social
+unleashed dog,Animal
+unlicensed dog,Animal
+unsanitary animal facility,Animal
+unsanitary animal pvt property,Animal
+unsanitary condition,Health
+unsanitary pigeon condition,Animal
+urinating in public,Health
+vacant lot,Street/Parking
+vending,Street/Parking
+violation of park rules,Street/Parking
+water conservation,Water/Power
+water leak,Water/Power
+water quality,Water/Power
+water system,Water/Power
+window guard,Water/Power
+x-ray machine/equipment,Other
+ztestint,Other
