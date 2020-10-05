@@ -14,7 +14,7 @@ with open("config.json") as config_json:
 region = 'us-west-1'
 bucket = config['s3']['bucket']
 # Update to iterate over the 65 listings csv's; append to postgre
-key = 'NYC_Full_311.csv'
+# key = 'NYC_Full_311.csv'
 # key = 'NYC311_1k.csv'
 key = 'call10k.csv'
 
@@ -30,24 +30,44 @@ properties = {"user": config['postgre']['user'],
               "password": config['postgre']['password'],
               "driver": "org.postgresql.Driver"}
 
-# Read Data from S3
+# Read 311 Data from S3
 s3file = f's3a://{bucket}/{key}'
 raw_df = spark.read.csv(s3file, header = True, inferSchema=True, multiLine=True, escape='"')
 
-raw_df.show()
-"""
+# Read csv containing complaints mapping to broader topics
+topics_key = 'unique_complaints.csv'
+topics_s3file = f's3a://{bucket}/{topics_key}'
+topics_raw_df = spark.read.csv(topics_s3file, header = True, inferSchema=True, escape='"')
+topics_raw_df.show(10)
+
 
 # Convert complaint_type column to lowercase
 complaint_column = 'Complaint Type'
-# complaint_column = 'complaint_type'
 raw_df = raw_df.withColumn(complaint_column, lower(col(complaint_column)))
 
 columns = ['Created Date', 'Complaint Type', 'Incident Zip', 'Latitude', 'Longitude']
-# columns = ['created_date', 'complaint_type', 'incident_zip', 'latitude', 'longitude']
 
 # Select certain columns
-df_selected = raw_df.select(columns)
+complaint_selected = raw_df.select(columns)
+# complaint_selected.show(10)
 
+# Join the 311 complaints with the mapping to complaint topics
+complaints_joined = complaint_selected.join(topics_raw_df, "Complaint Type")
+# complaints_joined.show(10)
+
+# TEST: check number of nan in Clean_Complaint
+# complaints_joined.select([count(when(isnan(c), c)).alias(c) for c in complaints_joined.columns]).show()
+
+# Set the datatypes for the columns
+complaints_joined = complaints_joined.withColumn('Created Date', to_timestamp('Created Date'))
+complaints_joined = complaints_joined.withColumn('month', F.month('Created Date'))
+complaints_joined = complaints_joined.withColumn('year', F.year('Created Date'))
+complaints_joined = complaints_joined.withColumn('Incident Zip',
+                                                 complaints_joined["Incident Zip"].cast(IntegerType()))
+complaints_joined = complaints_joined.withColumn('Latitude', col('Latitude').cast('float'))
+complaints_joined = complaints_joined.withColumn('Longitude', col('Longitude').cast('float'))
+complaints_joined.printSchema()
+complaints_joined.show()
 # Filter out non-complaints
 # df_selected = df_selected.filter((~df_selected[complaint_column].contains('comments'))
 #                                 &(~df_selected[complaint_column].contains(".."))
@@ -74,13 +94,6 @@ df_selected = raw_df.select(columns)
 #                                 &(~df_selected[complaint_column].contains('dire'))
 #                                 &(~df_selected[complaint_column].contains('ferry permit'))
 #                                 &(~df_selected[complaint_column].contains('sleep 11')))
-# Get the unique complaits
-unique_complaints = df_selected.select(complaint_column).distinct()
-
-# Sort alphabetically
-counted_complaints = counted_complaints.sort(complaint_column)
-counted_complaints.toPandas().to_csv('unique_complaints_2.csv', index=False)
-# filtered_complaints = counted_complaints.filter(counted_complaints['count']>=1)
 
 # Create new column with generalized complaint_types
 # complaints_replaced = filtered_complaints.withColumn("complaint",
@@ -182,7 +195,7 @@ counted_complaints.toPandas().to_csv('unique_complaints_2.csv', index=False)
 # df_selected.groupBy(['latitude', 'longitude']).count().show()
 # df_selected.show()
 # df_selected.printSchema()
-"""
+
 spark.stop()
 # Append to the table
  # df.write.jdbc(url, table="abb", mode="append", properties=props)
