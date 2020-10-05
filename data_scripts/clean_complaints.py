@@ -14,9 +14,9 @@ with open("config.json") as config_json:
 region = 'us-west-1'
 bucket = config['s3']['bucket']
 # Update to iterate over the 65 listings csv's; append to postgre
-# key = 'NYC_Full_311.csv'
+key = 'NYC_Full_311.csv'
 # key = 'NYC311_1k.csv'
-key = 'call10k.csv'
+# key = 'call10k.csv'
 
 
 sc = SparkContext()
@@ -38,14 +38,13 @@ raw_df = spark.read.csv(s3file, header = True, inferSchema=True, multiLine=True,
 topics_key = 'unique_complaints.csv'
 topics_s3file = f's3a://{bucket}/{topics_key}'
 topics_raw_df = spark.read.csv(topics_s3file, header = True, inferSchema=True, escape='"')
-topics_raw_df.show(10)
 
 
 # Convert complaint_type column to lowercase
-complaint_column = 'Complaint Type'
-raw_df = raw_df.withColumn(complaint_column, lower(col(complaint_column)))
+raw_df = raw_df.withColumn('Complaint Type', lower(col('Complaint Type')))
+raw_df = raw_df.withColumn('Descriptor', lower(col('Descriptor')))
 
-columns = ['Created Date', 'Complaint Type', 'Incident Zip', 'Latitude', 'Longitude']
+columns = ['Created Date', 'Complaint Type', 'Descriptor', 'Incident Zip', 'Latitude', 'Longitude']
 
 # Select certain columns
 complaint_selected = raw_df.select(columns)
@@ -59,15 +58,28 @@ complaints_joined = complaint_selected.join(topics_raw_df, "Complaint Type")
 # complaints_joined.select([count(when(isnan(c), c)).alias(c) for c in complaints_joined.columns]).show()
 
 # Set the datatypes for the columns
-complaints_joined = complaints_joined.withColumn('Created Date', to_timestamp('Created Date'))
+complaints_joined = complaints_joined.withColumn('Created Date', to_timestamp('Created Date',
+                                                 format='MM/dd/yyyy HH:mm'))
 complaints_joined = complaints_joined.withColumn('month', F.month('Created Date'))
 complaints_joined = complaints_joined.withColumn('year', F.year('Created Date'))
 complaints_joined = complaints_joined.withColumn('Incident Zip',
                                                  complaints_joined["Incident Zip"].cast(IntegerType()))
 complaints_joined = complaints_joined.withColumn('Latitude', col('Latitude').cast('float'))
 complaints_joined = complaints_joined.withColumn('Longitude', col('Longitude').cast('float'))
-complaints_joined.printSchema()
-complaints_joined.show()
+
+# Create column date and one time; separate datetime
+# date_format('dty', 'M/d/yyyy').alias('Date')
+
+# Reove any complaints with no location information
+complaints_joined = complaints_joined.filter(complaints_joined['latitude'].isNotNull() &
+                                             complaints_joined['longitude'].isNotNull())
+complaints_joined = complaints_joined.filter(complaints_joined['Clean_Complaint'].isNotNull())
+
+# Add to database
+complaints_joined.write.jdbc(url, table="complaints", mode="append", properties=properties)
+# complaints_joined.printSchema()
+# complaints_joined.show()
+
 # Filter out non-complaints
 # df_selected = df_selected.filter((~df_selected[complaint_column].contains('comments'))
 #                                 &(~df_selected[complaint_column].contains(".."))
