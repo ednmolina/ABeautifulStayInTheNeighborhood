@@ -39,8 +39,16 @@ for i in range(abnb_files.shape[0]):
     listing_s3file = f's3a://{bucket}/{listing_key}'
     calendar_s3file = f's3a://{bucket}/{calendar_key}'
 
-    listing_raw_df = raw_df = spark.read.csv(listing_s3file, header = True, inferSchema=True, escape='"', multiLine = True)
-    calendar_raw_df = raw_df = spark.read.csv(calendar_s3file, header = True, inferSchema=True, escape='"', multiLine = True)
+    listing_raw_df = raw_df = spark.read.csv(listing_s3file,
+                                             header = True,
+                                             inferSchema=True,
+                                             escape='"',
+                                             multiLine = True)
+    calendar_raw_df = raw_df = spark.read.csv(calendar_s3file,
+                                              header = True,
+                                              inferSchema=True,
+                                              escape='"',
+                                              multiLine = True)
 
     # Subset the listing and calendar dataframes
     listing_cols = ['id', 'latitude', 'longitude', 'neighbourhood_cleansed',

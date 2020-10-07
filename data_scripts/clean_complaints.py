@@ -5,6 +5,7 @@ from pyspark.sql.functions import *
 from pyspark.sql import functions as F
 import json
 import pandas as pd
+import janitor.spark
 
 # Load the configuration s3file
 with open("config.json") as config_json:
@@ -75,6 +76,9 @@ complaints_joined = complaints_joined.filter(complaints_joined['latitude'].isNot
                                              complaints_joined['longitude'].isNotNull())
 complaints_joined = complaints_joined.filter(complaints_joined['Clean_Complaint'].isNotNull())
 
+# Rename columns
+complaints_joined = complaints_joined.clean_names()
+complaints_joined.show()
 # Add to database
 complaints_joined.write.jdbc(url, table="complaints", mode="append", properties=properties)
 # complaints_joined.printSchema()
