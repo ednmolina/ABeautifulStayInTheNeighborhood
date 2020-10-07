@@ -44,6 +44,7 @@ for i in range(abnb_files.shape[0]):
                                              inferSchema=True,
                                              escape='"',
                                              multiLine = True)
+                                             
     calendar_raw_df = raw_df = spark.read.csv(calendar_s3file,
                                               header = True,
                                               inferSchema=True,
