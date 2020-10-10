@@ -10,10 +10,10 @@ sudo wget -O listing_52.csv.gz "http://data.insideairbnb.com/united-states/ny/ne
 gunzip listing_52.csv.gz
 aws s3 cp listing_52.csv s3://edenbucket
 rm listing_52.csv
-sudo wget -O listing_52.csv.gz "http://data.insideairbnb.com/united-states/ny/new-york-city/2019-08-06/data/listings.csv.gz"
-gunzip listing_52.csv.gz
-aws s3 cp listing_52.csv s3://edenbucket
-rm listing_52.csv
+sudo wget -O listing_53.csv.gz "http://data.insideairbnb.com/united-states/ny/new-york-city/2019-08-06/data/listings.csv.gz"
+gunzip listing_53.csv.gz
+aws s3 cp listing_53.csv s3://edenbucket
+rm listing_53.csv
 sudo wget -O listing_54.csv.gz "http://data.insideairbnb.com/united-states/ny/new-york-city/2019-09-12/data/listings.csv.gz"
 gunzip listing_54.csv.gz
 aws s3 cp listing_54.csv s3://edenbucket
