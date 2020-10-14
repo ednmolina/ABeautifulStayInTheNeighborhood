@@ -29,7 +29,7 @@ properties = {"user": config['postgre']['user'],
               "driver": "org.postgresql.Driver"}
 
 # Load the csv containing files to load from s3 containing Airbnb Data
-abnb_files = pd.read_csv('files_to_read.csv')
+abnb_files = pd.read_csv('files_to_read_2.csv')
 
 # Remove dollar from printSchema
 get_price = udf(lambda x: float(x.replace('$', '').replace(',', '')), FloatType())
@@ -59,7 +59,8 @@ for i in range(abnb_files.shape[0]):
     # Subset the listing and calendar dataframes
     listing_cols = ['id', 'latitude', 'longitude', 'neighbourhood_cleansed',
                     'neighbourhood_group_cleansed', 'price', 'bedrooms',
-                    'bathrooms', 'minimum_nights', 'last_scraped']
+                    'bathrooms', 'minimum_nights', 'last_scraped', 'number_of_reviews',
+                    'listing_url']
     calendar_cols = ['listing_id', 'date', 'available', 'price']
 
     listings_selected = listing_raw_df[listing_cols]
@@ -71,7 +72,11 @@ for i in range(abnb_files.shape[0]):
     listings_selected = listings_selected.withColumn('month', F.month('timestamp'))
     listings_selected = listings_selected.withColumn('year', F.year('timestamp'))
 
+
+
+    # Subset the calendar data
     calendar_selected = calendar_raw_df[calendar_cols]
+
 
     # Compute the monthly average per listing from calendar_selected dataframes
     # Remove null, remove dollarsign, then group by listing and compute monthly average
@@ -84,12 +89,14 @@ for i in range(abnb_files.shape[0]):
     # Join the listing data with the 30_dy average data; will no inner join now
     listings_joined = listings_selected.join(calendar_averaged, "listing_id")
 
-
     # Drop where lat, long are null
     listings_joined = listings_joined.filter(listings_joined['latitude'].isNotNull() &
                                              listings_joined['longitude'].isNotNull())
+    listings_joined = listings_joined.filter(listings_joined['number_of_reviews'] > 0)
     listings_selected.show()
-    listings_joined.write.jdbc(url, table="listings", mode="append", properties=properties)
+    listings_joined.write.jdbc(url, table="listings_2020", mode="append", properties=properties)
+
+
 t2 = time.time()
 
 
