@@ -64,38 +64,41 @@ nearest_complaints_df = spark.read.format("jdbc") \
                         .option("driver", properties['driver']) \
                         .load()
 nearest_complaints_df.show()
-# # Get the top complaint for each listing
-# complaints_count = nearest_complaints_df.groupBy('listing_id', 'clean_complaint').count()
-# complaints_count.registerTempTable('complaints_count')
-# top_complaints = spark.sql("""select * from (
-#     select listing_id,
-#            clean_complaint,
-#            row_number() over (partition by listing_id order by count desc) as rank
-#     from complaints_count) ranks where rank <= 1""")
-# top_complaints = top_complaints.drop(col('rank'))
-#
-# # Get the top hour each complaint is reported for each listing
-# listing_hours = nearest_complaints_df.select(['listing_id', 'created_date']).withColumn('hour', hour(col('created_date')))
-# hours_count = listing_hours.groupBy('listing_id', 'hour').count()
-# hours_count.registerTempTable('hours_count')
-# top_hours = spark.sql("""select * from (
-#     select listing_id,
-#            hour,
-#            row_number() over (partition by listing_id order by count desc) as rank
-#     from hours_count) ranks where rank <= 1""")
-# top_hours = top_hours.orderBy(col('listing_id')).drop(col('rank'))
-#
-# # Save to database
-# t1 = time.time()
-# top_complaints.write.jdbc(url, table="top_complaints", mode="append", properties=properties)
-# t2 = time.time()
-#
-# t3 = time.time()
-# top_hours.write.jdbc(url, table="top_hours", mode="append", properties=properties)
-# t4 = time.time()
-#
-# outfile = open("top_complaints_hours_LowerEastSide_Oct14.txt", 'w')
-# outfile.write('%s, %s'%(str(t2-t1), str(t4-t3)))
-# outfile.close()
-#
-# spark.stop()
+
+# Get the top complaint for each listing
+complaints_count = nearest_complaints_df.groupBy('listing_id', 'clean_complaint').count()
+complaints_count.registerTempTable('complaints_count')
+top_complaints = spark.sql("""select * from (
+    select listing_id,
+           clean_complaint,
+           row_number() over (partition by listing_id order by count desc) as rank
+    from complaints_count) ranks where rank <= 1""")
+top_complaints = top_complaints.drop(col('rank'))
+top_complaints.show()
+
+# Get the top hour each complaint is reported for each listing
+listing_hours = nearest_complaints_df.select(['listing_id', 'created_date']).withColumn('hour', hour(col('created_date')))
+hours_count = listing_hours.groupBy('listing_id', 'hour').count()
+hours_count.registerTempTable('hours_count')
+top_hours = spark.sql("""select * from (
+    select listing_id,
+           hour,
+           row_number() over (partition by listing_id order by count desc) as rank
+    from hours_count) ranks where rank <= 1""")
+top_hours = top_hours.orderBy(col('listing_id')).drop(col('rank'))
+top_hours.show()
+
+# Save to database
+t1 = time.time()
+top_complaints.write.jdbc(url, table="top_complaints", mode="append", properties=properties)
+t2 = time.time()
+
+t3 = time.time()
+top_hours.write.jdbc(url, table="top_hours", mode="append", properties=properties)
+t4 = time.time()
+
+outfile = open("top_complaints_hours_LowerEastSide_Oct14.txt", 'w')
+outfile.write('%s, %s'%(str(t2-t1), str(t4-t3)))
+outfile.close()
+print (t2-t1, t4-t3)
+spark.stop()

@@ -41,17 +41,16 @@ complaint_df = psql.read_sql(sql_query, engine)
 sql_query = """select * from top_hours"""
 hour_df = psql.read_sql(sql_query, engine)
 
-
-df = df.merge(complaint_df)
 df = df.merge(hour_df)
+df = df.merge(complaint_df)
 
 # Create new columns: month and year
 df['year'] = pd.DatetimeIndex(df['created_date']).year
 df['month'] = pd.DatetimeIndex(df['created_date']).month
-print (df['neighbourhood_cleansed'].unique())
+
 # app_flask = Flask(__name__)
 app = dash.Dash(__name__)
-print ("This is the data", df)
+
 blackbold={'color':'black', 'font-weight': 'bold'}
 
 app.layout = html.Div([
@@ -75,10 +74,17 @@ app.layout = html.Div([
             # ),
 
             # Borough_checklist
-            html.Label(children=['Select borough to filterby: '], style=blackbold),
+            html.Label(children=['Select borough to filter by: '], style=blackbold),
             dcc.Checklist(id='boro_name',
                     options=[{'label':str(b),'value':b} for b in sorted(df['neighbourhood_group_cleansed'].unique())],
-                    value=['Brooklyn'],
+                    value=[b for b in sorted(df['neighbourhood_group_cleansed'].unique())],
+            ),
+
+            # Neighborhood_checklist
+            html.Label(children=['Select neighborhood to filter by: '], style=blackbold),
+            dcc.Checklist(id='neigh_name',
+                    options=[{'label':str(b),'value':b} for b in sorted(df['neighbourhood_cleansed'].unique())],
+                    value=[b for b in sorted(df['neighbourhood_cleansed'].unique())],
             ),
 
             # complaint checklist
@@ -106,7 +112,7 @@ app.layout = html.Div([
             html.Label(children=['Select price range to filter by'], style=blackbold),
             dcc.Checklist(id='price_type',
                     options=[{'label':str(b),'value':b} for b in ['< $100', '> $100']],
-                    value=['< $100'],
+                    value=[b for b in ['< $100', '> $100']],
             ),
 
             # Web_link
@@ -140,32 +146,32 @@ app.layout = html.Div([
 # Output of Graph
 @app.callback(Output('graph', 'figure'),
               [Input('boro_name', 'value'),
+              Input('neigh_name', 'value'),
               Input('recycling_type', 'value'),
               Input('year_type', 'value'),
               Input('month_type', 'value'),
               Input('price_type', 'value')])
 
-def update_figure(chosen_boro, chosen_recycling,chosen_year, chosen_month, chosen_price):
+def update_figure(chosen_boro,chosen_neighborhood, chosen_recycling,chosen_year, chosen_month, chosen_price):
+
+    # if 'Lower East Side' in chosen_neighborhood:
+    #     chosen_boro = chosen_boro.append(['Manhattan'])
+    #     print (chosen_boro)
 
     df_sub = df[(df['neighbourhood_group_cleansed'].isin(chosen_boro)) &
+                (df['neighbourhood_cleansed'].isin(chosen_neighborhood)) &
                 (df['clean_complaint'].isin(chosen_recycling)) &
                 (df['year'].isin(chosen_year)) &
                 (df['month'].isin(chosen_month))]
 
     # Check if user has filtered for price range
     if chosen_price == ['< $100']:
-
         df_sub = df_sub[df_sub['price']<np.float(100.0)]
     elif chosen_price == ['> $100']:
         df_sub = df_sub[df_sub['price']>np.float(100.0)]
     else:
         df_sub = df_sub
-    # Need to group by listing id then get top complaints
-    # print ("THIS IS DF_SUB")
-    # print (df_sub)
-    # print ("THIS IS SUB LAT LONG")
-    # print (df_sub[['long_list', 'lat_list']])
-    # Create figure
+
     # Create hovertext by combining columns
     df_sub['hovtext'] = 'Bedrooms: '+df_sub['bedrooms'].astype(str)+'<br>'+'Bathrooms: '+df_sub['bathrooms'].astype(str)+\
     '<br>Price: $'+df_sub['price'].astype(str)+\
@@ -173,6 +179,7 @@ def update_figure(chosen_boro, chosen_recycling,chosen_year, chosen_month, chose
     '<br>When Complaints Mostly Occur: '+df_sub['hour'].astype(str)+'<br>Top Complaint: '+df_sub['clean_complaint'].astype(str)+\
     '<br>30 Day Avg Price: $'+df_sub['avg_30_price'].round(2).astype(str)
 
+    # Create the map
     locations=[go.Scattermapbox(
                     lon = df_sub['long_list'],
                     lat = df_sub['lat_list'],
