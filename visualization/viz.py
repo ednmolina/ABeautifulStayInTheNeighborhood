@@ -48,10 +48,10 @@ df = df.merge(hour_df)
 # Create new columns: month and year
 df['year'] = pd.DatetimeIndex(df['created_date']).year
 df['month'] = pd.DatetimeIndex(df['created_date']).month
-
+print (df['neighbourhood_cleansed'].unique())
 # app_flask = Flask(__name__)
 app = dash.Dash(__name__)
-
+print ("This is the data", df)
 blackbold={'color':'black', 'font-weight': 'bold'}
 
 app.layout = html.Div([
@@ -146,12 +146,13 @@ app.layout = html.Div([
               Input('price_type', 'value')])
 
 def update_figure(chosen_boro, chosen_recycling,chosen_year, chosen_month, chosen_price):
+
     df_sub = df[(df['neighbourhood_group_cleansed'].isin(chosen_boro)) &
                 (df['clean_complaint'].isin(chosen_recycling)) &
                 (df['year'].isin(chosen_year)) &
                 (df['month'].isin(chosen_month))]
-    # print (df_sub['price'], df_sub[df_sub['price']>np.float(100.0)]['price'])
 
+    # Check if user has filtered for price range
     if chosen_price == ['< $100']:
 
         df_sub = df_sub[df_sub['price']<np.float(100.0)]
@@ -177,8 +178,8 @@ def update_figure(chosen_boro, chosen_recycling,chosen_year, chosen_month, chose
                     lat = df_sub['lat_list'],
                     mode='markers',
                     marker={'color' : '#EF3D4A'},
-                    unselected={'marker' : {'opacity':1, 'size':15}},
-                    selected={'marker' : {'opacity':0.25, 'size':25}},
+                    unselected={'marker' : {'opacity':.25, 'size':15}},
+                    selected={'marker' : {'opacity':1, 'size':15}},
                     hoverinfo='text',
                     hovertext=df_sub['hovtext'],
                     customdata=df_sub['listing_url']
@@ -192,14 +193,14 @@ def update_figure(chosen_boro, chosen_recycling,chosen_year, chosen_month, chose
             clickmode= 'event+select',
             hovermode='closest',
             hoverdistance=2,
-            title=dict(text="Be Our Guest",font=dict(size=50, color='red')),
+            title=dict(text="Be Our Guest",font=dict(size=50, color='#EE3D4B')),
             mapbox=dict(
                 accesstoken=mapbox_access_token,
                 bearing=0,
                 style='light',
                 center=dict(
-                    lat=np.float(40.711365), #, -73.956661 df_sub['lat_list'].mean()
-                    lon=np.float(-73.954414)
+                    lat=df['lat_list'].mean(), #, -73.956661 df_sub['lat_list'].mean()
+                    lon=df['long_list'].mean()
                 ),
                 pitch=0,
                 zoom=14

@@ -72,8 +72,6 @@ for i in range(abnb_files.shape[0]):
     listings_selected = listings_selected.withColumn('month', F.month('timestamp'))
     listings_selected = listings_selected.withColumn('year', F.year('timestamp'))
 
-
-
     # Subset the calendar data
     calendar_selected = calendar_raw_df[calendar_cols]
 
@@ -101,7 +99,7 @@ t2 = time.time()
 
 
 outfile = open("clean_airbnb_writetime.txt", 'w')
-outfile.write(t2-t1)
+outfile.write(str(t2-t1))
 outfile.close()
 
 spark.stop()

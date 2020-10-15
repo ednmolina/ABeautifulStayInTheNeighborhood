@@ -64,6 +64,30 @@ spark = SparkSession.builder \
 # Read dataset
 #Using ST_DWIthin (1512.6947438716888 s) (1503.8891398906708) (1529.1039083003998)
 # WIth grouping  4109.313810 s
+# sql_query = """select
+#     c.created_date,
+#     c.clean_complaint,
+# 	l.listing_id,
+#     l.latitude lat_list,
+#     l.longitude long_list,
+# 	l.price,
+# 	l.bedrooms,
+# 	l.bathrooms,
+# 	l.avg_30_price,
+#     l.month,
+#     l.year,
+# 	l.minimum_nights,
+# 	l.neighbourhood_cleansed,
+#     l.neighbourhood_group_cleansed,
+#     l.listing_url,
+#     l.number_of_reviews
+# from complaints_2020 c inner join listings_2020 l
+# on ST_DWithin(c.geom, l.geom, 100)
+# where l.neighbourhood_group_cleansed = 'Brooklyn'
+# and l.neighbourhood_cleansed = 'Williamsburg'
+# and c.month = 8
+# and c.year = 2020"""
+#Using ST_Intersects
 sql_query = """select
     c.created_date,
     c.clean_complaint,
@@ -82,17 +106,15 @@ sql_query = """select
     l.listing_url,
     l.number_of_reviews
 from complaints_2020 c inner join listings_2020 l
-on ST_DWithin(c.geom, l.geom, 100)
-where l.neighbourhood_group_cleansed = 'Brooklyn'
-and l.neighbourhood_cleansed = 'Williamsburg'
+on ST_Intersects(c.circle, l.circle)
+where l.neighbourhood_group_cleansed = 'Manhattan'
+and l.neighbourhood_cleansed = 'Lower East Side'
 and c.month = 8
 and c.year = 2020"""
-# Using ST_Intersects
+# Using ST_Distance
 # sql_query = """select
 #     c.created_date,
 #     c.clean_complaint,
-#     c.complaint_type,
-#     c.incident_zip,
 # 	l.listing_id,
 #     l.latitude lat_list,
 #     l.longitude long_list,
@@ -100,17 +122,19 @@ and c.year = 2020"""
 # 	l.bedrooms,
 # 	l.bathrooms,
 # 	l.avg_30_price,
+#     l.month,
+#     l.year,
 # 	l.minimum_nights,
 # 	l.neighbourhood_cleansed,
 #     l.neighbourhood_group_cleansed,
 #     l.listing_url,
-#     l.number_of_reviews,
-# 	ST_Distance(c.geom, l.geom) distance
-# from complaints_2020 c, listings_2020 l
-# where neighbourhood_group_cleansed = 'Brooklyn'
+#     l.number_of_reviews
+# from complaints_2020 c inner join listings_2020 l
+# on ST_DWithin(c.geom, l.geom, 100)
+# where l.neighbourhood_group_cleansed = 'Brooklyn'
+# and l.neighbourhood_cleansed = 'Williamsburg'
 # and c.month = 8
-# and c.year = 2020
-# and ST_Intersects(c.circle, l.circle)"""
+# and c.year = 2020"""
 
 nearest_complaints_df = spark.read.format("jdbc") \
                         .option("url", url) \
@@ -130,10 +154,10 @@ unique_listings.show()
 
 # Save to database
 t1 = time.time()
-unique_listings.write.jdbc(url, table="nearest_complaints", mode="overwrite", properties=properties)
+unique_listings.write.jdbc(url, table="nearest_complaints", mode="append", properties=properties)
 t2 = time.time()
 
-outfile = open("nearest_complaints_writetime_ST_DWithin_Oct13.txt", 'w')
+outfile = open("nearest_complaints_writetime_ST_Distance__LowerEastSide_Oct14.txt", 'w')
 outfile.write(str(t2-t1))
 outfile.close()
 print (str(t2-t1))
