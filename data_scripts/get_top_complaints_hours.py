@@ -17,7 +17,7 @@ from sqlalchemy import func
 with open("config.json") as config_json:
     config = json.load(config_json)
 
-# # Postgres Config
+# Postgres Config
 url = f"jdbc:postgresql://{config['postgre']['ip']}:{config['postgre']['port']}/{config['postgre']['db']}"
 properties = {"user": config['postgre']['user'],
               "password": config['postgre']['password'],
@@ -27,11 +27,7 @@ spark = SparkSession.builder \
                     .appName("ABSIN") \
                     .getOrCreate()
 
-"""NEW METHOD"""
-
-# Read dataset
-#Using ST_DWIthin (1512.6947438716888 s) (1503.8891398906708) (1529.1039083003998)
-# WIth grouping  4109.313810 s
+# QUery mode of complaints for each listing and when complaints are reported
 sql_query = """select
     c.created_date,
     c.clean_complaint,

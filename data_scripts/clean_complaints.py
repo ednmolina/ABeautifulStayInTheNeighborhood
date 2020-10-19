@@ -42,12 +42,6 @@ topics_key = 'unique_complaints.csv'
 topics_s3file = f's3a://{bucket}/{topics_key}'
 topics_raw_df = spark.read.csv(topics_s3file, header = True, inferSchema=True, escape='"')
 
-# Read csv containing zip code and borough
-# zip_key = 'zip_borough.csv'
-# zip_s3file = f's3a://{bucket}/{topics_key}'
-# zip_raw_df = spark.read.csv(topics_s3file, header = True, inferSchema=True, escape='"')
-# zip_raw_df.show()
-#
 # Convert complaint_type column to lowercase
 raw_df = raw_df.withColumn('Complaint Type', lower(col('Complaint Type')))
 raw_df = raw_df.withColumn('Descriptor', lower(col('Descriptor')))

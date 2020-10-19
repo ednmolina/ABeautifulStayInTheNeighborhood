@@ -30,115 +30,31 @@ spark = SparkSession.builder \
                     # .config("spark.executor.heartbeatInterval", "12000s")\
                     # .config("spark.network.timeout", "11000s")\
 
+# Using ST_Intersects query nearest complaints
+sql_query = """select
+    c.created_date,
+    c.clean_complaint,
+	l.listing_id,
+    l.latitude lat_list,
+    l.longitude long_list,
+	l.price,
+	l.bedrooms,
+	l.bathrooms,
+	l.avg_30_price,
+    l.month,
+    l.year,
+	l.minimum_nights,
+	l.neighbourhood_cleansed,
+    l.neighbourhood_group_cleansed,
+    l.listing_url,
+    l.number_of_reviews
+from complaints_2020 c inner join listings_2020 l
+on ST_Intersects(c.circle, l.circle)
+where l.neighbourhood_group_cleansed = 'Manhattan'
+and l.neighbourhood_cleansed = 'Lower East Side'
+and c.month = 8
+and c.year = 2020"""
 
-# # Read listings data
-# listings_df = spark.read.jdbc(url=url, table='listings', properties=properties)
-#
-# # Create tempview to query
-# listings_df.createOrReplaceTempView('listings')
-#
-# # Test query
-# listings_query = spark.sql("""
-#     SELECT latitude, longitude
-#     FROM listings
-#     LIMIT 10
-# """)
-# listings_query.show()
-
-
-# #Read listings data
-# complaints_df = spark.read.jdbc(url=url, table='complaints', properties=properties)
-#
-# # Create tempview to query
-# complaints_df.createOrReplaceTempView('complaints')
-
-# Test query
-# complaints_query = spark.sql("""
-#     select * from complaints limit 10
-# """)
-# complaints_query.show()
-# spark.stop()
-
-"""NEW METHOD"""
-
-# Read dataset
-#Using ST_DWIthin (1512.6947438716888 s) (1503.8891398906708) (1529.1039083003998)
-# WIth grouping  4109.313810 s
-# sql_query = """select
-#     c.created_date,
-#     c.clean_complaint,
-# 	l.listing_id,
-#     l.latitude lat_list,
-#     l.longitude long_list,
-# 	l.price,
-# 	l.bedrooms,
-# 	l.bathrooms,
-# 	l.avg_30_price,
-#     l.month,
-#     l.year,
-# 	l.minimum_nights,
-# 	l.neighbourhood_cleansed,
-#     l.neighbourhood_group_cleansed,
-#     l.listing_url,
-#     l.number_of_reviews
-# from complaints_2020 c inner join listings_2020 l
-# on ST_DWithin(c.geom, l.geom, 100)
-# where l.neighbourhood_group_cleansed = 'Brooklyn'
-# and l.neighbourhood_cleansed = 'Williamsburg'
-# and c.month = 8
-# and c.year = 2020"""
-#Using ST_Intersects
-# sql_query = """select
-#     c.created_date,
-#     c.clean_complaint,
-# 	l.listing_id,
-#     l.latitude lat_list,
-#     l.longitude long_list,
-# 	l.price,
-# 	l.bedrooms,
-# 	l.bathrooms,
-# 	l.avg_30_price,
-#     l.month,
-#     l.year,
-# 	l.minimum_nights,
-# 	l.neighbourhood_cleansed,
-#     l.neighbourhood_group_cleansed,
-#     l.listing_url,
-#     l.number_of_reviews
-# from complaints_2020 c inner join listings_2020 l
-# on ST_Intersects(c.circle, l.circle)
-# where l.neighbourhood_group_cleansed = 'Manhattan'
-# and l.neighbourhood_cleansed = 'Lower East Side'
-# and c.month = 8
-# and c.year = 2020"""
-# Using ST_Distance
-# sql_query = """select
-#     c.created_date,
-#     c.clean_complaint,
-# 	l.listing_id,
-#     l.latitude lat_list,
-#     l.longitude long_list,
-# 	l.price,
-# 	l.bedrooms,
-# 	l.bathrooms,
-# 	l.avg_30_price,
-#     l.month,
-#     l.year,
-# 	l.minimum_nights,
-# 	l.neighbourhood_cleansed,
-#     l.neighbourhood_group_cleansed,
-#     l.listing_url,
-#     l.number_of_reviews
-# from listings_2020 l
-# cross join LATERAL(
-#     select *
-#     from complaints_2020 cc
-#     where ST_Distance(complaints_2020.geom, l.geom) < 100
-#     and l.neighbourhood_group_cleansed = 'Brooklyn'
-#     and l.neighbourhood_cleansed = 'Williamsburg'
-#     and cc.month = 8
-#     and cc.year = 2020
-# ) as c;"""
 
 nearest_complaints_df = spark.read.format("jdbc") \
                         .option("url", url) \
