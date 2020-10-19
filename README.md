@@ -1,5 +1,5 @@
 # Be Our Guest
-When booking a place to stay users typically know what part of town they want to stay. Choosing the right Airbnb can come down to a few key features not yet captured in the Airbnb listing such as neighborhood activity (like noise in the area) and price fluctuation over the past 30 days. Be Our Guest enables users to view common 311 complaints
+When booking a place to stay users typically know what part of town they want to stay. Choosing the right Airbnb can come down to a few key features not yet captured in the Airbnb listing such as neighborhood activity (like noise in the area) and price fluctuation over the past 30 days. Be Our Guest enables users to view common 311 complaints. A visualization of the Airbnb listings, nearest complaints, and other information can be seen on [this site](http://datapipe.space/).
 
 ## Datasets
 The two datasets used in this projects come from Airbnb and NYC Open Data. There are five years of listing, review, and pricing data available from Airbnb. The [NYC Airbnb](http://insideairbnb.com/get-the-data.html) totals to around 60+ GB. The [311 complaints dataset](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9) contains complaints from 2010 to the present. This data amounts to around 13 GB.
