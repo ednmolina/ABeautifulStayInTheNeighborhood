@@ -88,30 +88,6 @@ spark = SparkSession.builder \
 # and c.month = 8
 # and c.year = 2020"""
 #Using ST_Intersects
-sql_query = """select
-    c.created_date,
-    c.clean_complaint,
-	l.listing_id,
-    l.latitude lat_list,
-    l.longitude long_list,
-	l.price,
-	l.bedrooms,
-	l.bathrooms,
-	l.avg_30_price,
-    l.month,
-    l.year,
-	l.minimum_nights,
-	l.neighbourhood_cleansed,
-    l.neighbourhood_group_cleansed,
-    l.listing_url,
-    l.number_of_reviews
-from complaints_2020 c inner join listings_2020 l
-on ST_Intersects(c.circle, l.circle)
-where l.neighbourhood_group_cleansed = 'Manhattan'
-and l.neighbourhood_cleansed = 'Lower East Side'
-and c.month = 8
-and c.year = 2020"""
-# Using ST_Distance
 # sql_query = """select
 #     c.created_date,
 #     c.clean_complaint,
@@ -130,11 +106,39 @@ and c.year = 2020"""
 #     l.listing_url,
 #     l.number_of_reviews
 # from complaints_2020 c inner join listings_2020 l
-# on ST_DWithin(c.geom, l.geom, 100)
-# where l.neighbourhood_group_cleansed = 'Brooklyn'
-# and l.neighbourhood_cleansed = 'Williamsburg'
+# on ST_Intersects(c.circle, l.circle)
+# where l.neighbourhood_group_cleansed = 'Manhattan'
+# and l.neighbourhood_cleansed = 'Lower East Side'
 # and c.month = 8
 # and c.year = 2020"""
+# Using ST_Distance
+# sql_query = """select
+#     c.created_date,
+#     c.clean_complaint,
+# 	l.listing_id,
+#     l.latitude lat_list,
+#     l.longitude long_list,
+# 	l.price,
+# 	l.bedrooms,
+# 	l.bathrooms,
+# 	l.avg_30_price,
+#     l.month,
+#     l.year,
+# 	l.minimum_nights,
+# 	l.neighbourhood_cleansed,
+#     l.neighbourhood_group_cleansed,
+#     l.listing_url,
+#     l.number_of_reviews
+# from listings_2020 l
+# cross join LATERAL(
+#     select *
+#     from complaints_2020 cc
+#     where ST_Distance(complaints_2020.geom, l.geom) < 100
+#     and l.neighbourhood_group_cleansed = 'Brooklyn'
+#     and l.neighbourhood_cleansed = 'Williamsburg'
+#     and cc.month = 8
+#     and cc.year = 2020
+# ) as c;"""
 
 nearest_complaints_df = spark.read.format("jdbc") \
                         .option("url", url) \
@@ -154,10 +158,10 @@ unique_listings.show()
 
 # Save to database
 t1 = time.time()
-unique_listings.write.jdbc(url, table="nearest_complaints", mode="append", properties=properties)
+unique_listings.write.jdbc(url, table="nearest_complaints_STDistance", mode="append", properties=properties)
 t2 = time.time()
 
-outfile = open("nearest_complaints_writetime_ST_Distance__LowerEastSide_Oct14.txt", 'w')
+outfile = open("nearest_complaints_writetime_STDistance_Williamsburg_Oct15.txt", 'w')
 outfile.write(str(t2-t1))
 outfile.close()
 print (str(t2-t1))
