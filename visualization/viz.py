@@ -137,20 +137,23 @@ app.layout = html.Div([
         html.Div([
             html.Img(
                 src='https://raw.githubusercontent.com/ednmolina/ABeautifulStayInTheNeighborhood/master/images/Logo.png',
+
                 style={
-                    'height' : '30%',
-                    'width' : '30%',
-                    'float' : 'center',
-                    'position' : 'static',
+                    'height' : '35%',
+                    'width' : '35%',
+                    # 'float' : 'center',
+                    'position' : 'relative',
                     'padding-top' : 0,
-                    'padding-right' : 0
+                    'padding-left' : 0,
+                    'display': 'block',
+                    'margin' : '1px auto'
                 })
     ]),
 
         # Map
         html.Div([
             dcc.Graph(id='graph', config={'displayModeBar': False, 'scrollZoom': True},
-                style={'background':'#00FC87','padding-bottom':'2px','padding-left':'2px','height':'100vh'}
+                style={'background': '#FFFFFF','padding-bottom':'0px','padding-left':'0px','height':'60vh', 'width':'100wh','margin' : '1px auto'}
             )
         ], className='nine columns'
         ),
