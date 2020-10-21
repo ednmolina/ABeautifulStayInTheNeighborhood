@@ -233,4 +233,4 @@ def display_click_data(clickData):
 
 # #--------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=True, port=80, host="ec2-54-193-212-80.us-west-1.compute.amazonaws.com")
+    app.run_server(debug=True, port=80, host=config["ec2"]["host"])

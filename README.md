@@ -2,7 +2,7 @@
 [Introduction](README.md#Introduction)
   * [Website](README.md#Website)
   * [Slides](README.md#Slides)
-[Datasets]((README.md#Datasets)
+[Datasets](README.md#Datasets)
 
 # Introduction
 When booking a place to stay users typically know what part of town they want to stay. Choosing the right Airbnb can come down to a few key features not yet captured in the Airbnb listing such as neighborhood activity (like noise in the area) and price fluctuation over the past 30 days. Be Our Guest enables users to view common 311 complaints. A visualization of the Airbnb listings, nearest complaints, and other information can be seen on [this site](http://datapipe.space/).
@@ -19,3 +19,8 @@ Slides for this project can be found [here](https://drive.google.com/file/d/1-TQ
 The two datasets used in this projects come from Airbnb and NYC Open Data. There are five years of listing, review, and pricing data available from Airbnb. The [NYC Airbnb](http://insideairbnb.com/get-the-data.html) totals to around 60+ GB. The [311 complaints dataset](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9) contains complaints from 2010 to the present. This data amounts to around 13 GB.
 
 For this project the data was gathered early September 2020 so only listing information up until August 2020 can be used. This is because Airbnb releases listing, review, and pricing data at the end of each month.
+
+# Architecture
+Historical listings data from Airbnb and 311 calls is taken from AWS S3 to be cleaned and transformed by PySpark. The cleaned data is stored into a POSTGRES database where geospatial queries will be executed in order to find the top complaints around each listing. problem is disjoint..
+
+![alt text](https://github.com/ednmolina/ABeautifulStayInTheNeighborhood/blob/master/images/Architecture.png)
