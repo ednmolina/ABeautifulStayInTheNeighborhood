@@ -134,7 +134,18 @@ app.layout = html.Div([
         ], className='three columns'
         ),
 
-        # html.Div(html.Img(src=encoded_image, style={'height':'10%', 'width':'10%'})),
+        html.Div([
+            html.Img(
+                src='https://raw.githubusercontent.com/ednmolina/ABeautifulStayInTheNeighborhood/master/images/Logo.png',
+                style={
+                    'height' : '30%',
+                    'width' : '30%',
+                    'float' : 'center',
+                    'position' : 'static',
+                    'padding-top' : 0,
+                    'padding-right' : 0
+                })
+    ]),
 
         # Map
         html.Div([
@@ -208,7 +219,7 @@ def update_figure(chosen_boro,chosen_neighborhood, chosen_recycling,chosen_year,
             clickmode= 'event+select',
             hovermode='closest',
             hoverdistance=2,
-            title=dict(text="Be Our Guest",font=dict(size=50, color='#EE3D4B')),
+            # title=dict(text="Be Our Guest",font=dict(size=50, color='#EE3D4B')),
             mapbox=dict(
                 accesstoken=mapbox_access_token,
                 bearing=0,
