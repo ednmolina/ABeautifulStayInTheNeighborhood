@@ -11,6 +11,8 @@ import plotly.graph_objs as go
 import psycopg2 as pg
 import pandas.io.sql as psql
 import socket
+import os
+import base64
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -52,6 +54,10 @@ df['month'] = pd.DatetimeIndex(df['created_date']).month
 app = dash.Dash(__name__)
 
 blackbold={'color':'black', 'font-weight': 'bold'}
+
+# Import logo image
+image_filename = 'Logo.png'
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 app.layout = html.Div([
 #---------------------------------------------------------------
@@ -127,6 +133,8 @@ app.layout = html.Div([
 
         ], className='three columns'
         ),
+
+        # html.Div(html.Img(src=encoded_image, style={'height':'10%', 'width':'10%'})),
 
         # Map
         html.Div([
