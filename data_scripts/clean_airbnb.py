@@ -97,11 +97,8 @@ for i in range(abnb_files.shape[0]):
 
 t2 = time.time()
 
-
 outfile = open("clean_airbnb_writetime.txt", 'w')
 outfile.write(str(t2-t1))
 outfile.close()
 
 spark.stop()
-# Append to the table
- # df.write.jdbc(url, table="abb", mode="append", properties=props)
