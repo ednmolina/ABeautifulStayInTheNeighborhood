@@ -80,14 +80,14 @@ app.layout = html.Div([
             # ),
 
             # Borough_checklist
-            html.Label(children=['Select borough to filter by: '], style=blackbold),
+            html.Label(children=['Select borough to filter by'], style=blackbold),
             dcc.Checklist(id='boro_name',
                     options=[{'label':str(b),'value':b} for b in sorted(df['neighbourhood_group_cleansed'].unique())],
                     value=[b for b in sorted(df['neighbourhood_group_cleansed'].unique())],
             ),
 
             # Neighborhood_checklist
-            html.Label(children=['Select neighborhood to filter by: '], style=blackbold),
+            html.Label(children=['Select neighborhood to filter by'], style=blackbold),
             dcc.Checklist(id='neigh_name',
                     options=[{'label':str(b),'value':b} for b in sorted(df['neighbourhood_cleansed'].unique())],
                     value=[b for b in sorted(df['neighbourhood_cleansed'].unique())],
@@ -123,10 +123,15 @@ app.layout = html.Div([
 
             # Web_link
             html.Br(),
-            html.Label(['Airbnb Listing Link:'],style=blackbold),
+            html.Label(['Airbnb Listing Link:'],style={'color':'black',
+                                                       'font-weight': 'bold',
+                                                       'text-align': 'center',
+                                                       'vertical-align': 'middle'
+                                                       }),
             html.Pre(id='web_link', children=[],
             style={'white-space': 'pre-wrap','word-break': 'break-all',
-                 'border': '1px solid black','text-align': 'center',
+                 # 'border': '1px solid black'
+                 'text-align': 'center',
                  'padding': '12px 12px 12px 12px', 'color':'blue',
                  'margin-top': '3px'}
             ),
@@ -134,13 +139,14 @@ app.layout = html.Div([
         ], className='three columns'
         ),
 
+        # Adding image of logo and subtitle
         html.Div([
             html.Img(
                 src='https://raw.githubusercontent.com/ednmolina/ABeautifulStayInTheNeighborhood/master/images/Logo.png',
 
                 style={
-                    'height' : '35%',
-                    'width' : '35%',
+                    'height' : '60%',
+                    'width' : '60%',
                     # 'float' : 'center',
                     'position' : 'relative',
                     'padding-top' : 0,
@@ -153,7 +159,7 @@ app.layout = html.Div([
         # Map
         html.Div([
             dcc.Graph(id='graph', config={'displayModeBar': False, 'scrollZoom': True},
-                style={'background': '#FFFFFF','padding-bottom':'0px','padding-left':'0px','height':'60vh', 'width':'100wh','margin' : '1px auto'}
+                style={'background': '#FFFFFF','padding-bottom':'0px','padding-left':'0px','height':'70vh', 'width':'100wh','margin' : '1px auto'}
             )
         ], className='nine columns'
         ),
@@ -211,7 +217,10 @@ def update_figure(chosen_boro,chosen_neighborhood, chosen_recycling,chosen_year,
                     selected={'marker' : {'opacity':1, 'size':15}},
                     hoverinfo='text',
                     hovertext=df_sub['hovtext'],
-                    customdata=df_sub['listing_url']
+                    customdata=df_sub['listing_url'],
+                    hoverlabel=dict(
+                                font_size=15,
+                            )
     )]
 
     # Return figure
@@ -232,7 +241,7 @@ def update_figure(chosen_boro,chosen_neighborhood, chosen_recycling,chosen_year,
                     lon=df['long_list'].mean()
                 ),
                 pitch=0,
-                zoom=14
+                zoom=13.6
             ),
         )
     }
