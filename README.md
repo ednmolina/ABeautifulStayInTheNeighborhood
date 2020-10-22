@@ -1,8 +1,11 @@
+![alt text](https://github.com/ednmolina/ABeautifulStayInTheNeighborhood/blob/master/images/Logo.png)
+
 # Table of Contents
 [Introduction](README.md#Introduction)
   * [Website](README.md#Website)
   * [Slides](README.md#Slides)
-[Datasets](README.md#Datasets)
+  * [Datasets](README.md#Datasets)
+  * [Architecture](README.md#Architecture)
 
 # Introduction
 When booking a place to stay users typically know what part of town they want to stay. Choosing the right Airbnb can come down to a few key features not yet captured in the Airbnb listing such as neighborhood activity (like noise in the area) and price fluctuation over the past 30 days. Be Our Guest enables users to view common 311 complaints. A visualization of the Airbnb listings, nearest complaints, and other information can be seen on [this site](http://datapipe.space/).
