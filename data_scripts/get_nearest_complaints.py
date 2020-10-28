@@ -27,8 +27,6 @@ properties = {"user": config['postgre']['user'],
 spark = SparkSession.builder \
                     .appName("ABSIN") \
                     .getOrCreate()
-                    # .config("spark.executor.heartbeatInterval", "12000s")\
-                    # .config("spark.network.timeout", "11000s")\
 
 # Using ST_Intersects query nearest complaints
 sql_query = """select
@@ -55,7 +53,6 @@ and l.neighbourhood_cleansed = 'Lower East Side'
 and c.month = 8
 and c.year = 2020"""
 
-
 nearest_complaints_df = spark.read.format("jdbc") \
                         .option("url", url) \
                         .option("query", sql_query) \
@@ -64,7 +61,7 @@ nearest_complaints_df = spark.read.format("jdbc") \
                         .option("driver", properties['driver']) \
                         .load()
 
-# Get all the unique listings in Williamsburg, Brooklyn
+# Get all the unique listings in Lower East Side, Manhattan
 unique_listings = nearest_complaints_df.drop_duplicates(['listing_id']).drop('clean_complaint')
 
 # Reformat the price column to remove the dollar sign
@@ -74,10 +71,11 @@ unique_listings.show()
 
 # Save to database
 t1 = time.time()
-unique_listings.write.jdbc(url, table="nearest_complaints_STDistance", mode="append", properties=properties)
+unique_listings.write.jdbc(url, table="nearest_complaints", mode="append", properties=properties)
 t2 = time.time()
 
-outfile = open("nearest_complaints_writetime_STDistance_Williamsburg_Oct15.txt", 'w')
+# Save text file containint how long it took to write the file
+outfile = open("nearest_complaints_writetime.txt", 'w')
 outfile.write(str(t2-t1))
 outfile.close()
 print (str(t2-t1))

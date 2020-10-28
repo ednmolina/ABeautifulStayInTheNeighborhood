@@ -79,6 +79,53 @@ app.layout = html.Div([
             # ], style={'border-bottom': 'solid 3px', 'border-color':'#00FC87','padding-top': '6px'}
             # ),
 
+        # Adding image of logo and subtitle
+        html.Div([
+            html.Img(
+                src='https://raw.githubusercontent.com/ednmolina/ABeautifulStayInTheNeighborhood/master/images/Logo.png',
+
+                style={
+                    'height' : '60%',
+                    'width' : '60%',
+                    # 'float' : 'center',
+                    'position' : 'relative',
+                    'padding-top' : 0,
+                    'padding-left' : 0,
+                    'display': 'block',
+                    'margin' : '1px auto'
+                })
+    ]),
+
+        # Web_link
+        html.Br(),
+        # html.Label(['Airbnb Listing Link:'],style={'color':'black',
+        #                                            'font-weight': 'bold',
+        #                                            'text-align': 'center',
+        #                                            'margin-top': '3px'
+        #                                            }),
+        html.Pre(id='web_link', children=[],
+        style={'white-space': 'pre-wrap','word-break': 'break-all',
+             # 'border': '1px solid black'
+             'text-align': 'center',
+             'padding': '12px 12px 12px 12px', 'color':'blue',
+             'margin-top': '3px'}
+        ),
+
+    ], className='three columns'
+    ),
+
+
+        # Map
+        html.Div([
+            dcc.Graph(id='graph', config={'displayModeBar': False, 'scrollZoom': True},
+                style={'background': '#FFFFFF','padding-bottom':'0px','padding-left':'0px','height':'70vh', 'width':'100wh','margin' : '1px auto'}
+            )
+        ], className='nine columns'
+        ),
+
+    ], className='row'
+    ),
+
             # Borough_checklist
             html.Label(children=['Select borough to filter by'], style=blackbold),
             dcc.Checklist(id='boro_name',
@@ -95,7 +142,7 @@ app.layout = html.Div([
 
             # complaint checklist
             html.Label(children=['Select complaint to filter by'], style=blackbold),
-            dcc.Checklist(id='recycling_type',
+            dcc.Checklist(id='complaint_id',
                     options=[{'label':str(b),'value':b} for b in sorted(df['clean_complaint'].unique())],
                     value=['Noise'], #[b for b in sorted(df['top_complaint'].unique())]
             ),
@@ -121,51 +168,6 @@ app.layout = html.Div([
                     value=[b for b in ['< $100', '> $100']],
             ),
 
-            # Web_link
-            html.Br(),
-            html.Label(['Airbnb Listing Link:'],style={'color':'black',
-                                                       'font-weight': 'bold',
-                                                       'text-align': 'center',
-                                                       'vertical-align': 'middle'
-                                                       }),
-            html.Pre(id='web_link', children=[],
-            style={'white-space': 'pre-wrap','word-break': 'break-all',
-                 # 'border': '1px solid black'
-                 'text-align': 'center',
-                 'padding': '12px 12px 12px 12px', 'color':'blue',
-                 'margin-top': '3px'}
-            ),
-
-        ], className='three columns'
-        ),
-
-        # Adding image of logo and subtitle
-        html.Div([
-            html.Img(
-                src='https://raw.githubusercontent.com/ednmolina/ABeautifulStayInTheNeighborhood/master/images/Logo.png',
-
-                style={
-                    'height' : '60%',
-                    'width' : '60%',
-                    # 'float' : 'center',
-                    'position' : 'relative',
-                    'padding-top' : 0,
-                    'padding-left' : 0,
-                    'display': 'block',
-                    'margin' : '1px auto'
-                })
-    ]),
-
-        # Map
-        html.Div([
-            dcc.Graph(id='graph', config={'displayModeBar': False, 'scrollZoom': True},
-                style={'background': '#FFFFFF','padding-bottom':'0px','padding-left':'0px','height':'70vh', 'width':'100wh','margin' : '1px auto'}
-            )
-        ], className='nine columns'
-        ),
-
-    ], className='row'
-    ),
 
 ], className='ten columns offset-by-one'
 )
@@ -175,7 +177,7 @@ app.layout = html.Div([
 @app.callback(Output('graph', 'figure'),
               [Input('boro_name', 'value'),
               Input('neigh_name', 'value'),
-              Input('recycling_type', 'value'),
+              Input('complaint_id', 'value'),
               Input('year_type', 'value'),
               Input('month_type', 'value'),
               Input('price_type', 'value')])
@@ -205,7 +207,7 @@ def update_figure(chosen_boro,chosen_neighborhood, chosen_recycling,chosen_year,
     '<br>Price: $'+df_sub['price'].astype(str)+\
     '<br>Min Nights: '+df_sub['minimum_nights'].astype(str)+'<br>Number of Reviews: '+df_sub['number_of_reviews'].astype(str)+\
     '<br>When Complaints Mostly Occur: '+df_sub['hour'].astype(str)+'<br>Top Complaint: '+df_sub['clean_complaint'].astype(str)+\
-    '<br>30 Day Avg Price: $'+df_sub['avg_30_price'].round(2).astype(str)
+    '<br>Avg Month Price: $'+df_sub['avg_30_price'].round(2).astype(str)
 
     # Create the map
     locations=[go.Scattermapbox(
@@ -264,4 +266,4 @@ def display_click_data(clickData):
 
 # #--------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=True, port=80, host=config["ec2"]["host"])
+    app.run_server(debug=False, port=80, host=config["ec2"]["host"])
